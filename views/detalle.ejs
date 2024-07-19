@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a class="navbar-brand" href="/">Principal</a>
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item active">
+          <a class="nav-link" href="/servicios">Servicios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/123">404</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/mascotas">Mascotas</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/mascotas/crear">Crear</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+  <div class="container">
+    <h1>Detalle Mascota</h1>
+    <% if (error) { %>
+    <p><%= mensaje %></p>
+    <a href="/mascotas" class="btn btn-dark btn-block">Volver a Mascotas</a>
+    <% } else { %>
+    
+    <form id="editar" data-id="<%= mascota.id %>">
+      <input 
+          type="text"
+          value="<%= mascota.nombre %>"
+          class="form-control my-2"
+          name="nombre"
+          id="nombreInput"
+      >
+      <input 
+          type="text"
+          value="<%= mascota.descripcion %>"
+          class="form-control my-2"
+          name="descripcion"
+          id="descripcionInput"
+      >
+      <button
+          class="btn btn-warning btn-sm"
+          type="submit"
+      >
+          Editar
+      </button>
+    </form>
+    <hr>
+    <button class="btn btn-danger btn-sm" id="eliminarMascotaBtn">Eliminar</button>
+  
+  </div>
+  <% } %> 
+  <script>
+    const eliminarMascotaBtn = document.getElementById('eliminarMascotaBtn');
+
+    eliminarMascotaBtn.addEventListener('click', async function() {
+      const mascotaId = '<%= mascota.id %>';
+      try {
+        const data = await fetch(`http://localhost:3000/mascotas/${mascotaId}`, {
+          method: 'DELETE'
+        });
+        const res = await data.json();
+        console.log(data);
+        if(res.estado){
+           window.location.href = '/mascotas'
+        } else {
+          console.log(res)
+        }
+      } catch (error) {
+        console.error('Error en la solicitud DELETE', error);
+      }
+    });
+
+    const formEditar = document.querySelector('#editar');
+    formEditar.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nombre = document.querySelector('#nombreInput').value;
+      const descripcion = document.querySelector('#descripcionInput').value;
+      const mascotaId = '<%= mascota.id %>';
+      
+      try {
+        const data = await fetch(`/mascotas/${mascotaId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ nombre, descripcion })
+        });
+
+        const res = await data.json();
+        if(res.estado){
+           window.location.href = '/mascotas'
+        } else {
+          console.log(res)
+        }
+        
+      } catch (error) {
+        console.error('Error en la solicitud PUT', error);
+      }
+    });
+  </script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

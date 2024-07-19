@@ -1,0 +1,37 @@
+<%- include("template/cabecera.ejs", {tituloWeb : "pagina de inicio"}) %>
+<div class="container">
+    <h1 class="text-center">crud</h1>
+    <a class="btn btn-success btn-block my-4 "
+    href="/mascotas/crear" 
+    >
+      crear nueva mascota
+    </a>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Descripcion </th>
+            <th scope="col">Accion</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% if (arrayMascotas.length > 0) { %>
+                <% arrayMascotas.forEach(mascota => { %>
+                    <tr>
+                        <th scope="row"><%= mascota.id %></th>
+                        <td><%= mascota.nombre %></td>
+                        <td><%= mascota.descripcion %></td>
+                        <td>
+                          <a class="btn btn-warning btn-sm" href="/mascotas/<%= mascota.id %>">Editar</a>
+                        </td>
+                      </tr>
+                 
+                <% }) %>
+             
+            <% } %>
+        </tbody>
+    </table>
+    
+</div>
+<%- include("template/footer") %>
